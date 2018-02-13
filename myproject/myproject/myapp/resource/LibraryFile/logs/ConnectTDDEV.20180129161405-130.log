@@ -1,0 +1,35 @@
+2018-01-29 16:14:05,794 - teradata.udaexec - INFO - Initializing UdaExec...
+2018-01-29 16:14:05,794 - teradata.udaexec - INFO - Reading config files: [u'/etc/udaexec.ini: Not Found', u'/Users/mifang/udaexec.ini: Not Found', u'/Users/mifang/Documents/Expedia/Project/tutorial/marginVali/ede_marginfile_validation_python/LibraryFile/udaexec.ini: Found']
+2018-01-29 16:14:05,794 - teradata.udaexec - INFO - Found run number file: "/Users/mifang/Documents/Expedia/Project/tutorial/marginVali/ede_marginfile_validation_python/LibraryFile/.runNumber"
+2018-01-29 16:14:05,795 - teradata.udaexec - INFO - Cleaning up log files older than 90 days.
+2018-01-29 16:14:05,795 - teradata.udaexec - INFO - Removed 0 log files.
+2018-01-29 16:14:05,843 - teradata.udaexec - INFO - Checkpoint file not found: /Users/mifang/Documents/Expedia/Project/tutorial/marginVali/ede_marginfile_validation_python/LibraryFile/ConnectTDDEV.checkpoint
+2018-01-29 16:14:05,843 - teradata.udaexec - INFO - No previous checkpoint found, executing from beginning...
+2018-01-29 16:14:05,843 - teradata.udaexec - INFO - Execution Details:
+/********************************************************************************
+ * Application Name: ConnectTDDEV
+ *          Version: 2
+ *       Run Number: 20180129161405-130
+ *             Host: BELC02RJ96BG8WN.sea.corp.expecn.com
+ *         Platform: Darwin-16.7.0-x86_64-i386-64bit
+ *          OS User: mifang
+ *   Python Version: 2.7.10
+ *  Python Compiler: GCC 4.2.1 Compatible Apple LLVM 8.0.0 (clang-800.0.34)
+ *     Python Build: ('default', 'Feb  7 2017 00:08:15')
+ *  UdaExec Version: 15.10.0.21
+ *     Program Name: connectTD.py
+ *      Working Dir: /Users/mifang/Documents/Expedia/Project/tutorial/marginVali/ede_marginfile_validation_python/LibraryFile
+ *      Git Version: git version 2.14.3 (Apple Git-98)
+ *     Git Revision: 83f4648
+ *        Git Dirty: True [ M DataFile/sample3.0.csv, M LibraryFile/pos.txt, M MarginFile3.0/vali_margin_3.0.py,?? LibraryFile/.runNumber,?? LibraryFile/ETLDM_MARGIN_ADJ_FACTR_EXTENDED_BEC_2018.csv,?? LibraryFile/index.html,?? LibraryFile/logs/,?? LibraryFile/sample1.0.csv,?? LibraryFile/sample3.0.csv,?? LibraryFile/simpleHTTPServerWithUpload.py,?? LibraryFile/triggersubprocess.py,?? MarginFile1.0/Rev_GP_by_POS_FY17_201709_CRUISE.CSV,?? MarginFile3.0/.runNumber,?? MarginFile3.0/logs/]
+ *          Log Dir: /Users/mifang/Documents/Expedia/Project/tutorial/marginVali/ede_marginfile_validation_python/LibraryFile/logs
+ *         Log File: /Users/mifang/Documents/Expedia/Project/tutorial/marginVali/ede_marginfile_validation_python/LibraryFile/logs/ConnectTDDEV.20180129161405-130.log
+ *     Config Files: [u'/etc/udaexec.ini: Not Found', u'/Users/mifang/udaexec.ini: Not Found', u'/Users/mifang/Documents/Expedia/Project/tutorial/marginVali/ede_marginfile_validation_python/LibraryFile/udaexec.ini: Found']
+ *      Query Bands: ApplicationName=ConnectTDDEV;Version=2;JobID=20180129161405-130;ClientUser=mifang;Production=False;udaAppLogFile=/Users/mifang/Documents/Expedia/Project/tutorial/marginVali/ede_marginfile_validation_python/LibraryFile/logs/ConnectTDDEV.20180129161405-130.log;gitRevision=83f4648;gitDirty=True;UtilityName=PyTd;UtilityVersion=15.10.0.21
+********************************************************************************/
+2018-01-29 16:14:05,852 - teradata.udaexec - INFO - Creating connection: {'username': 'D_DM_BEX_CLICKSTREAM_ADB', 'password': 'XXXXXX', 'method': 'odbc', 'system': 'tddev'}
+2018-01-29 16:14:05,852 - teradata.tdodbc - INFO - Loading ODBC Library: libiodbc.dylib
+2018-01-29 16:14:05,862 - teradata.tdodbc - INFO - Available drivers: Teradata Database ODBC Driver 16.20
+2018-01-29 16:14:07,299 - teradata.udaexec - INFO - Connection successful. Duration: 1.447 seconds. Details: {'username': 'D_DM_BEX_CLICKSTREAM_ADB', 'password': 'XXXXXX', 'method': 'odbc', 'system': 'tddev'}
+2018-01-29 16:14:36,896 - teradata.udaexec - INFO - Query Successful. Duration: 29.596 seconds, Rows: 138, Query: select OREPLACE(SITE_NAME,'.',' ') as SITE_NAME from D_ADS_BEX_COMMON.DM_OMNITURE_SITE
+2018-01-29 16:14:37,664 - teradata.udaexec - INFO - UdaExec exiting.
