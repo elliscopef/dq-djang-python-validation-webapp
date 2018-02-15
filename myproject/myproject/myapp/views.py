@@ -9,6 +9,8 @@ from myproject.myapp.forms import DocumentForm
 from resource.LibraryFile import simpleHTTPServerWithUpload
 from resource import validateMarginFile
 from resource import varSettings
+import os
+
 global logInfo 
 
 logInfo = []
@@ -20,15 +22,32 @@ def list(request):
         if form.is_valid():
             newdoc = Document(docfile=request.FILES['docfile'])
             newdoc.save()
-            print(request.FILES['docfile'])
-            #handle the validation of the newly loaded file
-            #fn = os.path.join(path, fn[0])
+
+            print "Retrive the uploaded file"
+            dirTwoLevelUp = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '../..', 'media/documents'))
+            addSlashToFile = '/'+request.FILES['docfile'].name
+            uploadedFileAbsPath = os.path.join(dirTwoLevelUp,request.FILES['docfile'].name)
+
+
+            print "uploadedFileAbsPath  : "
+            print uploadedFileAbsPath
+
+
+
+            print "Start the validation process"
+            validateMarginFile.validateMarginFileProcess(uploadedFileAbsPath,3,logInfo)
+            # validateMarginFile.validateMarginFileProcess("/Users/mifang/Documents/Expedia/Project/tutorial/djangoTutorial/dq-djang-python-validation-webapp/myproject/myproject/myapp/resource/DataFile/sample3.0.csv",3,logInfo)
             
-            validateMarginFile.validateMarginFileProcess("/Users/mifang/Documents/Expedia/Project/tutorial/djangoTutorial/dq-djang-python-validation-webapp/myproject/myproject/myapp/resource/DataFile/sample3.0.csv",3,logInfo)
+            print "Start to remove the file from the folder"
+            os.remove(uploadedFileAbsPath)
+
             # print logInfo
             #simpleHTTPServerWithUpload.validateCsvFile()
             #simpleHTTPServerWithUpload.validateCsvFile("/Users/mifang/Documents/Expedia/Project/tutorial/djangoTutorial/dq-djang-python-validation-webapp/myproject/myproject/myapp/resource/DataFile/sample3.0.csv",3)
             #navigation to a validation log page
+
+            #Delete uploaded file
+
 
             # Redirect to the document list after POST
             return HttpResponseRedirect(reverse('log'))
