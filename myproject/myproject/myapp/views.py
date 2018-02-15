@@ -7,9 +7,14 @@ from django.core.urlresolvers import reverse
 from myproject.myapp.models import Document
 from myproject.myapp.forms import DocumentForm
 from resource.LibraryFile import simpleHTTPServerWithUpload
+from resource import validateMarginFile
+from resource import varSettings
+global logInfo 
 
+logInfo = []
 def list(request):
     # Handle file upload
+
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
@@ -18,12 +23,15 @@ def list(request):
             print(request.FILES['docfile'])
             #handle the validation of the newly loaded file
             #fn = os.path.join(path, fn[0])
-            simpleHTTPServerWithUpload.validateCsvFile("/Users/mifang/Documents/Expedia/Project/tutorial/marginVali/ede_marginfile_validation_python/LibraryFile/Rev_GP_by_POS_FY18_201801_3PPackage_update.csv",1)
+            
+            validateMarginFile.validateMarginFileProcess("/Users/mifang/Documents/Expedia/Project/tutorial/djangoTutorial/dq-djang-python-validation-webapp/myproject/myproject/myapp/resource/DataFile/sample3.0.csv",3,logInfo)
+            # print logInfo
+            #simpleHTTPServerWithUpload.validateCsvFile()
             #simpleHTTPServerWithUpload.validateCsvFile("/Users/mifang/Documents/Expedia/Project/tutorial/djangoTutorial/dq-djang-python-validation-webapp/myproject/myproject/myapp/resource/DataFile/sample3.0.csv",3)
             #navigation to a validation log page
 
             # Redirect to the document list after POST
-            return HttpResponseRedirect(reverse('list'))
+            return HttpResponseRedirect(reverse('log'))
     else:
         form = DocumentForm()  # A empty, unbound form
 
@@ -38,4 +46,9 @@ def list(request):
     )
 
 def log(request):
-    return HttpResponseRedirect(reverse('log')) 
+    return render(
+        request,
+        'log.html',
+        {'documents': logInfo}
+    )
+

@@ -6,17 +6,16 @@
     </head>
 
     <body>
-        <!-- List of uploaded documents -->
-<!--         {% if documents %}
+        <p>Please see the below for the validation log</p>
+        {% if documents %}
             <ul>
                 {% for document in documents %}
-                    <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
+                    <li>{{document}}</li>
                 {% endfor %}
             </ul>
         {% else %}
             <p>No documents.</p>
-        {% endif %} -->
-        <p>putting some static txt for log in</p>
+        {% endif %}
     </body>
 
 </html>

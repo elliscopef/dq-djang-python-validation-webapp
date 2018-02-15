@@ -62,26 +62,26 @@ def load_pos_data():
 	return content
 
 
-def validation_fail_msg():
-	print "The validation process terminates due to above error message"
+def validation_fail_msg(logInfo):
+	logInfo.append("The validation process terminates due to above error message")
 
 
-def section_fail_msg(section_name):
-	print section_name + " Column Format isn't Correct"
-	validation_fail_msg()
+def section_fail_msg(section_name,logInfo):
+	logInfo.append(section_name + " Column Format isn't Correct")
+	validation_fail_msg(logInfo)
 
 
-def section_validated_msg(section_name):
-	print section_name + " Column Format Validated Successfully"
+def section_validated_msg(section_name,logInfo):
+	logInfo.append(section_name + " Column Format Validated Successfully")
 	global row_tracker 
 	row_tracker = 1
 
 
-def checkYearFormat(int):
+def checkYearFormat(int,logInfo):
 	return len(str(int)) == 4
 
 
-def checkMonthFormat(input):
+def checkMonthFormat(input,logInfo):
 	if not isinstance(input, int):
 		return False
 	if not 1<= input <= 12:
@@ -89,17 +89,17 @@ def checkMonthFormat(input):
 	return True
 
 
-def checkPOSFormat(input,pos_dic):
+def checkPOSFormat(input,pos_dic,logInfo):
 	if not isinstance(input, str):
 		return False
 	if not input in pos_dic:
-		print input + " is not a recognized site name"
+		logInfo.append(input + " is not a recognized site name")
 		return False
 	pos_dic[input] = int(pos_dic[input])+1	
 	return True
 
 
-def checkPkg_saFormat(input):
+def checkPkg_saFormat(input,logInfo):
 	if not isinstance(input, str):
 		return False
 	if not input in pkg_sa_set:
@@ -107,7 +107,7 @@ def checkPkg_saFormat(input):
 	return True
 
 
-def checkMer_agnFormat(input):
+def checkMer_agnFormat(input,logInfo):
 	if not isinstance(input, str):
 		return False
 	if not input in mer_agn_set:
@@ -115,7 +115,7 @@ def checkMer_agnFormat(input):
 	return True
 
 
-def checkLobFormat(input):
+def checkLobFormat(input,logInfo):
 	if not isinstance(input, str):
 		return False
 	if not input in lob_set:
@@ -123,7 +123,7 @@ def checkLobFormat(input):
 	return True
 
 
-def checkOnline_offFormat(input):
+def checkOnline_offFormat(input,logInfo):
 	if not isinstance(input, str):
 		return False
 	if not input in onlien_offln_ind_set:
@@ -131,36 +131,36 @@ def checkOnline_offFormat(input):
 	return True
 
 
-def row_tracker_alert():
-	print "Error input at : " + str(row_tracker)
+def row_tracker_alert(logInfo):
+	logInfo.append("Error input at : " + str(row_tracker))
 
 
-def row_tracker_incre():
+def row_tracker_incre(logInfo):
 	global row_tracker
 	row_tracker+=1
 
 
-def check_if_less_than_one(input,df):
+def check_if_less_than_one(input,df,logInfo):
 	return df[df[input] >1].empty
 
 
-def check_factor_column(column_name,df):
-	if check_if_less_than_one(column_name,df):
-		section_validated_msg(column_name)
+def check_factor_column(column_name,df,logInfo):
+	if check_if_less_than_one(column_name,df,logInfo):
+		section_validated_msg(column_name,logInfo)
 	else:
-		section_fail_msg(column_name)
+		section_fail_msg(column_name,logInfo)
 		sys.exit(0)
 
 
 
-def validateMarginFile_v3(sourceFileName):
+def validateMarginFile_v3(sourceFileName,logInfo):
 	print"Initialize the validation process" 
-	print "Start to Load the margin 3.0 file"
+	logInfo.append("Start to Load the margin 3.0 file")
 	pos_set  = load_pos_data()
 	filename = sourceFileName
 	df = pd.read_csv(filename,index_col=False)
-	print "Load file successfully"
-	print "Start to validate the column"
+	logInfo.append("Load file successfully")
+	logInfo.append("Start to validate the column")
 
 
 	zeroList = [0] * len(pos_set)
@@ -173,90 +173,90 @@ def validateMarginFile_v3(sourceFileName):
 	#CheckHeader 
 	if(header_set[0].strip() != 'YEAR' or header_set[1].strip() !='MONTH' or header_set[2].strip() != 'POS' or header_set[3].strip() != 'PKG_SA' or header_set[4].strip() != 'MER_AGN' or header_set[5].strip() != 'LOB' or header_set[6].strip() != 'ONLINE_OFFLN_IND' ):
 		if(header_set[7].strip() != 'REV_ADJ_FACTR_%' or header_set[8].strip() != 'COS_ADJ_FACTR_%' or header_set[9].strip() != 'VCOS_ADJ_FACTR_%'):
-			print "Header isn't formatted correctly"
+			logInfo.append("Header isn't formatted correctly")
 			sys.exit(0)
 
 
 #YEAR
 #YEAR in YYYY format
 	for year in df[header_set[0].strip()]:
-		row_tracker_incre()
-		if not checkYearFormat(year):
-			section_fail_msg(header_set[0].strip())
-			row_tracker_alert()
+		row_tracker_incre(logInfo)
+		if not checkYearFormat(year,logInfo):
+			section_fail_msg(header_set[0].strip(),logInfo)
+			row_tracker_alert(logInfo)
 			sys.exit(0)
-	section_validated_msg(header_set[0].strip())
+	section_validated_msg(header_set[0].strip(),logInfo)
 
 #Month
 # in mm format
 	for month in df[header_set[1].strip()]:
-		row_tracker_incre()
-		if not checkMonthFormat(month):
-			section_fail_msg(header_set[1].strip())
-			row_tracker_alert()
+		row_tracker_incre(logInfo)
+		if not checkMonthFormat(month,logInfo):
+			section_fail_msg(header_set[1].strip(),logInfo)
+			row_tracker_alert(logInfo)
 			sys.exit(0)
 
-	section_validated_msg(header_set[1].strip())
+	section_validated_msg(header_set[1].strip(),logInfo)
 
 #POS
 #Point of Sale. It should match with site name in dm_omniture_site (e.g., 'Expedia JP', 'Airasiago SG', 'Expedia Barclays'
 	for pos in df[header_set[2].strip()]:
-		row_tracker_incre()
+		row_tracker_incre(logInfo)
 		pos = pos.upper() #Convert to All Uppercase for alignment
-		if not checkPOSFormat(pos,pos_dic):
-			section_fail_msg(header_set[2].strip())
-			row_tracker_alert()
+		if not checkPOSFormat(pos,pos_dic,logInfo):
+			section_fail_msg(header_set[2].strip(),logInfo)
+			row_tracker_alert(logInfo)
 			sys.exit(0)
 
-	section_validated_msg(header_set[2].strip())
+	section_validated_msg(header_set[2].strip(),logInfo)
 
 
 #PKG_SA
 #Valid values 
 #Case sensitive
 	for pkg_sa in df[header_set[3].strip()]:
-		row_tracker_incre()
-		if not checkPkg_saFormat(pkg_sa):
-			section_fail_msg(header_set[3].strip())
-			row_tracker_alert()
+		row_tracker_incre(logInfo)
+		if not checkPkg_saFormat(pkg_sa,logInfo):
+			section_fail_msg(header_set[3].strip(),logInfo)
+			row_tracker_alert(logInfo)
 			sys.exit(0)
 
-	section_validated_msg(header_set[3].strip())
+	section_validated_msg(header_set[3].strip(),logInfo)
 
 
 
 #Business Model Name
 #Case sensitive
 	for mer_agn in df[header_set[4].strip()]:
-		row_tracker_incre()
-		if not checkMer_agnFormat(mer_agn):
-			section_fail_msg(header_set[4].strip())
-			row_tracker_alert()
+		row_tracker_incre(logInfo)
+		if not checkMer_agnFormat(mer_agn,logInfo):
+			section_fail_msg(header_set[4].strip(),logInfo)
+			row_tracker_alert(logInfo)
 			sys.exit(0)
 
-	section_validated_msg(header_set[4].strip())
+	section_validated_msg(header_set[4].strip(),logInfo)
 
 #LOB
 	for lob in df[header_set[5].strip()]:
-		row_tracker_incre()
-		if not checkLobFormat(lob):
-			section_fail_msg(header_set[5].strip())
-			row_tracker_alert()
+		row_tracker_incre(logInfo)
+		if not checkLobFormat(lob,logInfo):
+			section_fail_msg(header_set[5].strip(),logInfo)
+			row_tracker_alert(logInfo)
 			sys.exit(0)
 
-	section_validated_msg(header_set[5].strip())
+	section_validated_msg(header_set[5].strip(),logInfo)
 
 #onlien_offln_ind
 #Online/offline indicator - Valid Values 
 #Case Sensitive
 	for onlien_offln_ind in df[header_set[6].strip()]:
-		row_tracker_incre()
-		if not checkOnline_offFormat(onlien_offln_ind):
-			section_fail_msg(header_set[6].strip())
-			row_tracker_alert()
+		row_tracker_incre(logInfo)
+		if not checkOnline_offFormat(onlien_offln_ind,logInfo):
+			section_fail_msg(header_set[6].strip(),logInfo)
+			row_tracker_alert(logInfo)
 			sys.exit(0)
 
-	section_validated_msg(header_set[6].strip())
+	section_validated_msg(header_set[6].strip(),logInfo)
 
 #dest_airpt_iata_regn_name
 #Destination Airport Region Name (for Air only)
@@ -267,7 +267,7 @@ def validateMarginFile_v3(sourceFileName):
 #rev_adj_factr_%
  #<=1 
 #Adj Factr for Net Rev. It should beelse process will be aborted.
-	check_factor_column(header_set[7].strip(),df)
+	check_factor_column(header_set[7].strip(),df,logInfo)
 #rev_adj_factr_unit
 #Adj Factr for Net Rev(for Air only)
 
@@ -275,7 +275,7 @@ def validateMarginFile_v3(sourceFileName):
 #cos_adj_factr_%
 #<=1 
 #Adj Factr for Cost of Sale. It should be <=1 else process will be aborted.
-	check_factor_column(header_set[8].strip(),df)
+	check_factor_column(header_set[8].strip(),df,logInfo)
 
 #cos_adj_factr_unit
 # Adj Factr for Cost of Sale(for Air only)
@@ -283,18 +283,18 @@ def validateMarginFile_v3(sourceFileName):
 # vcos_adj_factr_%
 #<=1 
 # Adj Factr for Variable Cost of Sale. It should be <=1 else process will be aborted.
-	check_factor_column(header_set[9].strip(),df)
+	check_factor_column(header_set[9].strip(),df,logInfo)
 
 # vcos_adj_factr_unit
 # Adj Factr for Variable cost of sale(for Air only)
 
-	print "Below is a list of site names not shown up in table"
-	print "Point of sale, number of occurance"
+	logInfo.append("Below is a list of site names not shown up in table")
+	logInfo.append("Point of sale, number of occurance")
 	for x in pos_dic:
 		if(pos_dic[x]==0):
-			print (x,pos_dic[x])
+			logInfo.append((x,pos_dic[x]))
 	
 
-	print "Validation Successfully Completed"
+	logInfo.append("Validation Successfully Completed")
 
-	print "Validation process finished for " + filename + ". Ready to Upload"
+	logInfo.append("Validation process finished for " + filename + ". Ready to Upload")

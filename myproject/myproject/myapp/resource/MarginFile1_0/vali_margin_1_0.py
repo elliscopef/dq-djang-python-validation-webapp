@@ -51,21 +51,21 @@ def load_pos_data():
 	return content
 
 
-def validation_fail_msg():
-	print "The validation process terminates due to above error message"
+def validation_fail_msg(logInfo):
+	logInfo.append("The validation process terminates due to above error message")
 
 
-def section_fail_msg(section_name):
-	print section_name + " Column Format isn't Correct"
+def section_fail_msg(section_name,logInfo):
+	logInfo.append(section_name + " Column Format isn't Correct")
 	validation_fail_msg()
 
 
-def section_validated_msg(section_name):
-	print section_name + " Column Format Validated Successfully"
+def section_validated_msg(section_name,logInfo):
+	logInfo.append(section_name + " Column Format Validated Successfully")
 	# row_tracker = 1
 
 
-def checkAccountFormat(input):
+def checkAccountFormat(input,logInfo):
 	if not isinstance(input, str):
 		return False
 	if not input in account_set:
@@ -73,17 +73,17 @@ def checkAccountFormat(input):
 	return True
 
 
-def checkPOSFormat(input,pos_dic):
+def checkPOSFormat(input,pos_dic,logInfo):
 	if not isinstance(input, str):
 		return False
 	if not input in pos_dic:
-		print input + " is not a recognized site name"
+		logInfo.append(input + " is not a recognized site name")
 		return False
 	pos_dic[input] = int(pos_dic[input])+1		
 	return True
 
 
-def checkBusinessTypeFormat(input):
+def checkBusinessTypeFormat(input,logInfo):
 	if not isinstance(input, str):
 		return False
 	if not input in mer_agn_set:
@@ -91,7 +91,7 @@ def checkBusinessTypeFormat(input):
 	return True
 
 
-def checkLobFormat(input):
+def checkLobFormat(input,logInfo):
 	if not isinstance(input, str):
 		return False
 	if not input in lob_set:
@@ -99,7 +99,7 @@ def checkLobFormat(input):
 	return True
 
 
-def checkProductFormat(input):
+def checkProductFormat(input,logInfo):
 	if not isinstance(input, str):
 		return False
 	if not input in product_set:
@@ -107,27 +107,27 @@ def checkProductFormat(input):
 	return True
 
 
-def checkPercentageFormat(input):
+def checkPercentageFormat(input,logInfo):
 	if input.endswith('%'):
 		input = input[:-1]
 		input_change = float(input)
 
 
 
-def row_tracker_alert():
-	print "Error input at : " + str(row_tracker)
+def row_tracker_alert(logInfo):
+	logInfo.append("Error input at : " + str(row_tracker))
 
 
-def row_tracker_incre():
+def row_tracker_incre(logInfo):
 	global row_tracker
 	row_tracker+=1
 
 
-def check_if_less_than_one(input):
+def check_if_less_than_one(input,logInfo):
 	return df[df[input] >1].empty
 
 
-def check_factor_column(column_name):
+def check_factor_column(column_name,logInfo):
 	if check_if_less_than_one(column_name):
 		section_validated_msg(column_name)
 	else:
@@ -135,9 +135,9 @@ def check_factor_column(column_name):
 		sys.exit(0)
 
 
-def validateMarginFile_v1(sourceFileName):
+def validateMarginFile_v1(sourceFileName,logInfo):
 	print"Initialize the validation process" 
-	print "Start to Load the margin 1.0 file"
+	logInfo.append("Start to Load the margin 1.0 file")
 	pos_set = load_pos_data()
 	zeroList = [0] * len(pos_set)
 	pos_list_tuple = zip(pos_set, zeroList)
@@ -146,9 +146,9 @@ def validateMarginFile_v1(sourceFileName):
 	filename = sourceFileName
 	df = pd.read_csv(filename,index_col=False)
 
-	print "Load file successfully"
+	logInfo.append("Load file successfully")
 
-	print "Start to validate the column"
+	logInfo.append("Start to validate the column")
 
 
 #Retrive the header set of the data
@@ -156,68 +156,68 @@ def validateMarginFile_v1(sourceFileName):
 
 #CheckHeader 
 	if(header_set[0].strip() != 'Account' or header_set[1].strip() !='Point of Sale' or header_set[2].strip() != 'Business Type' or header_set[3].strip() != 'Product'):
-		print "Header isn't formatted correctly"
+		logInfo.append("Header isn't formatted correctly")
 		sys.exit(0)
 
 
 
 #Account
 	for account in df[header_set[0]]:
-		row_tracker_incre()
-		if not checkAccountFormat(account):
-			section_fail_msg(header_set[0])
-			row_tracker_alert()
+		row_tracker_incre(logInfo)
+		if not checkAccountFormat(account,logInfo):
+			section_fail_msg(header_set[0],logInfo)
+			row_tracker_alert(logInfo)
 			sys.exit(0)
 
-	section_validated_msg(header_set[0])
+	section_validated_msg(header_set[0],logInfo)
 
 #POS
 #Point of Sale. It should match with site name in dm_omniture_site (e.g., 'Expedia JP', 'Airasiago SG', 'Expedia Barclays'
 	for pos in df[header_set[1]]:
-		row_tracker_incre()
+		row_tracker_incre(logInfo)
 		pos = pos.upper() #Convert to All Uppercase for alignment
-		if not checkPOSFormat(pos,pos_dic):
-			section_fail_msg(header_set[1])
-			row_tracker_alert()
+		if not checkPOSFormat(pos,pos_dic,logInfo):
+			section_fail_msg(header_set[1],logInfo)
+			row_tracker_alert(logInfo)
 			sys.exit(0)
 
-	section_validated_msg(header_set[1])
+	section_validated_msg(header_set[1],logInfo)
 
 #Business Type
 	for business_type in df[header_set[2]]:
-		row_tracker_incre()
-		if not checkBusinessTypeFormat( business_type):
-			section_fail_msg(header_set[2])
-			row_tracker_alert()
+		row_tracker_incre(logInfo)
+		if not checkBusinessTypeFormat( business_type,logInfo):
+			section_fail_msg(header_set[2],logInfo)
+			row_tracker_alert(logInfo,logInfo)
 			sys.exit(0)
 
-	section_validated_msg(header_set[2])
+	section_validated_msg(header_set[2],logInfo)
 
 #   Product
 	for product in df[header_set[3]]:
-		row_tracker_incre()
-		if not checkProductFormat(product):
-			section_fail_msg(header_set[3])
-			row_tracker_alert()
+		row_tracker_incre(logInfo)
+		if not checkProductFormat(product,logInfo):
+			section_fail_msg(header_set[3],logInfo)
+			row_tracker_alert(logInfo)
 			sys.exit(0)
 
-	section_validated_msg(header_set[3])
+	section_validated_msg(header_set[3],logInfo)
 
 	data_column_name = df.columns[4:]
 	for date in data_column_name:
 		for data_entry in df[date]:
 			try:
-				checkPercentageFormat(data_entry)
+				checkPercentageFormat(data_entry,logInfo)
 			except ValueError:
-				print("ValueError: Value can not be converted to float format.")
-				section_fail_msg(date)
+				logInfo.append("ValueError: Value can not be converted to float format.")
+				section_fail_msg(date,logInfo)
 				sys.exit(0)
 
-	print "Below is a list of site names not shown up in table"
-	print "Point of sale, number of occurance"
+	logInfo.append("Below is a list of site names not shown up in table")
+	logInfo.append("Point of sale, number of occurance")
 	for x in pos_dic:
 		if(pos_dic[x]==0):
-			print (x,pos_dic[x])
-	print "Validation Successfully Completed"
+			logInfo.append((x,pos_dic[x]))
+	logInfo.append("Validation Successfully Completed")
 
-	print "Validation process finished for " + filename + ". Ready to Upload"
+	logInfo.append("Validation process finished for " + filename + ". Ready to Upload")
