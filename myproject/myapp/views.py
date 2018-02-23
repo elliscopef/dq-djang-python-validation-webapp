@@ -9,6 +9,8 @@ from myproject.myapp.forms import DocumentForm
 from resource.LibraryFile import simpleHTTPServerWithUpload
 from resource import validateMarginFile
 from resource import varSettings
+from time import sleep
+
 import os
 
 global logInfo 
@@ -18,8 +20,11 @@ logInfo = []
 
 
 def list(request):
+
     # Handle file upload
     if request.method == 'POST':
+        print "reset logIn to empty"
+        print "HERE IS THE POST METHOD"
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
             newdoc = Document(docfile=request.FILES['docfile'])
@@ -41,8 +46,7 @@ def list(request):
                 ValidationIndex = 1;
             else:
                 ValidationIndex = 3;
-            
-
+    
             print("Start the validation process")
             validateMarginFile.validateMarginFileProcess(uploadedFileAbsPath,ValidationIndex,logInfo)
             # validateMarginFile.validateMarginFileProcess("/Users/mifang/Documents/Expedia/Project/tutorial/djangoTutorial/dq-djang-python-validation-webapp/myproject/myproject/myapp/resource/DataFile/sample3.0.csv",3,logInfo)
@@ -51,13 +55,17 @@ def list(request):
             print("Start to remove the file from the folder")
             os.remove(uploadedFileAbsPath)
 
+            print "HERE IS THE LogInfo before reverse to log"
+            print logInfo
             # Redirect to the document list after POST
             return HttpResponseRedirect(reverse('log'))
     else:
+        print "HERE ISTHE ELSE CONDTION"
         form = DocumentForm()  # A empty, unbound form
 
     # Load documents for the list page
     documents = Document.objects.all()
+
 
     # Render list page with the documents and the form
     return render(

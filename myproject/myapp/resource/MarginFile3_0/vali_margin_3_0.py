@@ -40,7 +40,7 @@ global pos_dic
 
 #Variable for manualchange
 #************************************************************************************************************
-
+MIN_NUM_COLUMN = 10
 row_tracker = 1
 #NEED UPDATE 
 
@@ -48,7 +48,7 @@ pkg_sa_set = set(['Package','Standalone','Part Of Package'])
 mer_agn_set = set(['Merchant','Agency','Direct Agency'])
 lob_set = set(['Air','Car','Lodging','Hotel','Insurance','DestSvc' ,'Cruise','Train'])
 onlien_offln_ind_set = set(['Online','Offline'])
-
+column_name_order = ['YEAR','MONTH','POS','PKG_SA','MER_AGN','LOB','ONLINE_OFFLN_IND','DEST_AIRPT_IATA_REGN_NAME','DOM_INTL_IND','REV_ADJ_FACTR_%','REV_ADJ_FACTR_UNIT','COS_ADJ_FACTR_%','COS_ADJ_FACTR_UNIT','VCOS_ADJ_FACTR_%','VCOS_ADJ_FACTR_UNIT','MESOLOY_ADJ_FACTR_%','MESOLOY_ADJ_FACTR_UNIT','MESO_ADJ_FACTR_%','MESO_ADJ_FACTR_UNIT','LOYALTY_ADJ_FACTR_%','LOYALTY_ADJ_FACTR_UNIT','OTHER_ADJ_FACTR_%','OTHER_ADJ_FACTR_UNIT','BEC_ADJ_FACTR_UNIT']
 #************************************************************************************************************
 
 
@@ -64,6 +64,7 @@ def load_pos_data():
 
 def validation_fail_msg(logInfo):
 	logInfo.append("The validation process terminates due to above error message")
+	return
 
 
 def section_fail_msg(section_name,logInfo):
@@ -149,13 +150,13 @@ def check_factor_column(column_name,df,logInfo):
 		section_validated_msg(column_name,logInfo)
 	else:
 		section_fail_msg(column_name,logInfo)
-		sys.exit(0)
 
 
 
 def validateMarginFile_v3(sourceFileName,logInfo):
 	print"Initialize the validation process" 
-	logInfo.append("Start to Load the margin 3.0 file")
+	logInfo.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	logInfo.append("Start to Load the margin 3.0 file: "+sourceFileName)
 	pos_set  = load_pos_data()
 	filename = sourceFileName
 	df = pd.read_csv(filename,index_col=False)
@@ -170,11 +171,18 @@ def validateMarginFile_v3(sourceFileName,logInfo):
 
 
 	header_set = list(df)
+	print header_set
 	#CheckHeader 
-	if(header_set[0].strip() != 'YEAR' or header_set[1].strip() !='MONTH' or header_set[2].strip() != 'POS' or header_set[3].strip() != 'PKG_SA' or header_set[4].strip() != 'MER_AGN' or header_set[5].strip() != 'LOB' or header_set[6].strip() != 'ONLINE_OFFLN_IND' ):
-		if(header_set[7].strip() != 'REV_ADJ_FACTR_%' or header_set[8].strip() != 'COS_ADJ_FACTR_%' or header_set[9].strip() != 'VCOS_ADJ_FACTR_%'):
-			logInfo.append("Header isn't formatted correctly")
-			sys.exit(0)
+	if(len(header_set) <= MIN_NUM_COLUMN):
+		logInfo.append(len(header_set))
+		logInfo.append("Header column count number isn't correct ")
+		return 
+
+	for i in range(9):
+		if(header_set[i].strip()!=list(column_name_order)[i]):
+			logInfo.append("Header:" +column_name_order[i]+" isn't formatted correctly")
+			return
+
 
 
 #YEAR
@@ -182,9 +190,8 @@ def validateMarginFile_v3(sourceFileName,logInfo):
 	for year in df[header_set[0].strip()]:
 		row_tracker_incre(logInfo)
 		if not checkYearFormat(year,logInfo):
-			section_fail_msg(header_set[0].strip(),logInfo)
 			row_tracker_alert(logInfo)
-			sys.exit(0)
+			section_fail_msg(header_set[0].strip(),logInfo)
 	section_validated_msg(header_set[0].strip(),logInfo)
 
 #Month
@@ -192,10 +199,8 @@ def validateMarginFile_v3(sourceFileName,logInfo):
 	for month in df[header_set[1].strip()]:
 		row_tracker_incre(logInfo)
 		if not checkMonthFormat(month,logInfo):
-			section_fail_msg(header_set[1].strip(),logInfo)
 			row_tracker_alert(logInfo)
-			sys.exit(0)
-
+			section_fail_msg(header_set[1].strip(),logInfo)
 	section_validated_msg(header_set[1].strip(),logInfo)
 
 #POS
@@ -204,10 +209,8 @@ def validateMarginFile_v3(sourceFileName,logInfo):
 		row_tracker_incre(logInfo)
 		pos = pos.upper() #Convert to All Uppercase for alignment
 		if not checkPOSFormat(pos,pos_dic,logInfo):
-			section_fail_msg(header_set[2].strip(),logInfo)
 			row_tracker_alert(logInfo)
-			sys.exit(0)
-
+			section_fail_msg(header_set[2].strip(),logInfo)
 	section_validated_msg(header_set[2].strip(),logInfo)
 
 
@@ -217,10 +220,8 @@ def validateMarginFile_v3(sourceFileName,logInfo):
 	for pkg_sa in df[header_set[3].strip()]:
 		row_tracker_incre(logInfo)
 		if not checkPkg_saFormat(pkg_sa,logInfo):
-			section_fail_msg(header_set[3].strip(),logInfo)
 			row_tracker_alert(logInfo)
-			sys.exit(0)
-
+			section_fail_msg(header_set[3].strip(),logInfo)
 	section_validated_msg(header_set[3].strip(),logInfo)
 
 
@@ -230,20 +231,16 @@ def validateMarginFile_v3(sourceFileName,logInfo):
 	for mer_agn in df[header_set[4].strip()]:
 		row_tracker_incre(logInfo)
 		if not checkMer_agnFormat(mer_agn,logInfo):
-			section_fail_msg(header_set[4].strip(),logInfo)
 			row_tracker_alert(logInfo)
-			sys.exit(0)
-
+			section_fail_msg(header_set[4].strip(),logInfo)
 	section_validated_msg(header_set[4].strip(),logInfo)
 
 #LOB
 	for lob in df[header_set[5].strip()]:
 		row_tracker_incre(logInfo)
 		if not checkLobFormat(lob,logInfo):
-			section_fail_msg(header_set[5].strip(),logInfo)
 			row_tracker_alert(logInfo)
-			sys.exit(0)
-
+			section_fail_msg(header_set[5].strip(),logInfo)
 	section_validated_msg(header_set[5].strip(),logInfo)
 
 #onlien_offln_ind
@@ -252,10 +249,8 @@ def validateMarginFile_v3(sourceFileName,logInfo):
 	for onlien_offln_ind in df[header_set[6].strip()]:
 		row_tracker_incre(logInfo)
 		if not checkOnline_offFormat(onlien_offln_ind,logInfo):
-			section_fail_msg(header_set[6].strip(),logInfo)
 			row_tracker_alert(logInfo)
-			sys.exit(0)
-
+			section_fail_msg(header_set[6].strip(),logInfo)
 	section_validated_msg(header_set[6].strip(),logInfo)
 
 #dest_airpt_iata_regn_name

@@ -1,0 +1,72 @@
+SELECT                                                                                                     
+    'TD' as SOURCE                                                                                                
+    , CAST( TRANS_DATE AS CHAR(15)) AS TRANS_DATE                                                                                                
+    ,  SITE_NAME                                                                                                
+    , PRODUCT_LN_NAME                                                                                              
+    ,CATEGORY                                                                                               
+    ,SUM(FACT_TRANS_ITEM_COUNT) AS FACT_TRANS_ITEM_COUNT                                                                                                    
+        , SUM(FACT_GROSS_BKG_AMT_USD)     AS FACT_GROSS_BKG_AMT_USD                                                                                                      
+        --, SUM(FACT_UNIT_COUNT)          AS FACT_UNIT_COUNT                                                             
+        ,SUM(FACT_BASE_COST_AMT_USD) AS FACT_BASE_COST_AMT_USD                                                            
+        ,SUM(FACT_BASE_PRICE_AMT_USD) AS FACT_BASE_PRICE_AMT_USD                                                            
+        ,SUM(FACT_BASE_PRICE_AMT_USD) AS FACT_FRNT_END_CMSN_AMT_USD                                                            
+        ,SUM(FACT_TOTL_COST_ADJ_AMT_USD) AS FACT_TOTL_COST_ADJ_AMT_USD                                                            
+        ,SUM(FACT_TOTL_COST_AMT_USD) AS FACT_TOTL_COST_AMT_USD                                                            
+        ,SUM(FACT_TOTL_FEE_COST_AMT_USD) AS FACT_TOTL_FEE_COST_AMT_USD                                                            
+        ,SUM(FACT_TOTL_FEE_PRICE_AMT_USD) AS FACT_TOTL_FEE_PRICE_AMT_USD                                                            
+        ,SUM(FACT_TOTL_PRICE_ADJ_AMT_USD) AS FACT_TOTL_PRICE_ADJ_AMT_USD                                                            
+        ,SUM(FACT_EST_COST_OF_SALE_AMT_USD) AS FACT_EST_COST_OF_SALE_AMT_USD                                                            
+        ,SUM(FACT_EST_GROSS_PROFIT_AMT_USD) AS FACT_EST_GROSS_PROFIT_AMT_USD                                                            
+        ,SUM(FACT_EST_NET_REV_AMT_USD) AS FACT_EST_NET_REV_AMT_USD                                                            
+                                                                                         
+FROM                                                                                                     
+   (                                                                                                    
+    SELECT                                                                                                    
+        T1.TRANS_DATE_KEY               AS TRANS_DATE                                                                                                    
+        , SITE_DIM.SITE_NAME                  AS SITE_NAME                                                                                                    
+        , UPPER(BUSINESS_MODEL_NAME) AS BUSINESS_MODEL_NAME                                                                                         
+        , CASE WHEN T4.PKG_IND  <> 'Part Of Package' THEN 'AIR'                                                                                                    
+               WHEN T4.PKG_IND  = 'Part Of Package'  THEN 'PKGAIR'                                                                                                    
+               ELSE 'UNKNOWN'                                                                                                    
+          END                           AS PRODUCT_LN_NAME                                                                
+          , CASE WHEN TRANS_TYP_KEY = 101 THEN 'PURCHASE' ELSE 'NON-PURCHASE' END AS CATEGORY                                                                                                
+        , SUM(T1.AIR_TRANS_CNT)                       AS FACT_TRANS_ITEM_COUNT                                                                                                    
+        , SUM(T1.GROSS_BKG_AMT_USD)     AS FACT_GROSS_BKG_AMT_USD                                                                                                      
+        , SUM(T1.air_trans_tckt_cnt)          AS FACT_UNIT_COUNT                                                             
+        ,SUM(BASE_COST_AMT_USD) AS FACT_BASE_COST_AMT_USD                                                            
+        ,SUM(BASE_PRICE_AMT_USD) AS FACT_BASE_PRICE_AMT_USD                                                            
+        ,SUM(FRNT_END_CMSN_AMT_USD) AS FACT_FRNT_END_CMSN_AMT_USD                                                            
+        ,SUM(TOTL_COST_ADJ_AMT_USD) AS FACT_TOTL_COST_ADJ_AMT_USD                                                            
+        ,SUM(TOTL_COST_AMT_USD) AS FACT_TOTL_COST_AMT_USD                                                            
+        ,SUM(TOTL_FEE_COST_AMT_USD) AS FACT_TOTL_FEE_COST_AMT_USD                                                            
+        ,SUM(TOTL_FEE_PRICE_AMT_USD) AS FACT_TOTL_FEE_PRICE_AMT_USD                                                            
+        ,SUM(TOTL_PRICE_ADJ_AMT_USD) AS FACT_TOTL_PRICE_ADJ_AMT_USD                                                            
+        ,SUM(EST_COST_OF_SALE_AMT_USD) AS FACT_EST_COST_OF_SALE_AMT_USD                                                            
+        ,SUM(EST_GROSS_PROFIT_AMT_USD) AS FACT_EST_GROSS_PROFIT_AMT_USD                                                            
+        ,SUM(EST_NET_REV_AMT_USD) AS FACT_EST_NET_REV_AMT_USD                                                            
+                                                                  
+                                                                                                     
+    FROM                                                                                                    
+        P_DM_BKG_AIR.AIR_TRANS_FACT T1                                                                                                    
+        JOIN P_DM_BEX_CLICKSTREAM.EWW_BUSINESS_PARTNR T2 ON T1.BUSINESS_PARTNR_KEY = T2.BUSINESS_PARTNR_KEY AND T1.MGMT_UNIT_KEY = T2.MGMT_UNIT_KEY                                                                                                     
+        left  join P_DM_BEX_COMMON.DM_OMNITURE_SITE site_dim ON site_dim.site_name = T2.site_name                                                                                        
+        JOIN P_DM_COMMON.PRODUCT_LN_DIM T4 ON T1.PRODUCT_LN_KEY=T4.PRODUCT_LN_KEY                                                                                                    
+    WHERE                                                                                                    
+        T1.TRANS_DATE_KEY >= '2017-11-01' AND   T1.TRANS_DATE_KEY <= '2018-01-31'                                                                                   
+        AND T4.PKG_IND  <> 'Part Of Package'  AND T2.SITE_NAME = 'EXPEDIA.COM'                                                                               
+        AND T1.TRANS_TYP_KEY = 101                                                    
+    GROUP BY                                                                                                 
+        T1.TRANS_DATE_KEY                                                                                                     
+        , site_dim.SITE_NAME                                                                                                     
+        , BUSINESS_MODEL_NAME                                                                                       
+        , CASE WHEN T4.PKG_IND  <> 'Part Of Package' THEN 'AIR'                                                                                                    
+               WHEN T4.PKG_IND  = 'Part Of Package' THEN 'PKGAIR'                                                                                                    
+               ELSE 'UNKNOWN'                                                                                                    
+          END                                                              
+          , CASE WHEN TRANS_TYP_KEY = 101 THEN 'PURCHASE' ELSE 'NON-PURCHASE' END                                                                                                 
+        , TRL                                                                                                    
+        , TRANS_TYP_KEY                                                                                                    
+        --, COST_CURRN_KEY                                                                                                    
+        , SRC_SYS_ID                                                                                                    
+    ) FCT                                                                                                    
+GROUP BY 1,2,3,4,5                                                            
