@@ -1,0 +1,22 @@
+2018-02-16 01:28:22,751 - teradata.udaexec - INFO - Initializing UdaExec...
+2018-02-16 01:28:22,752 - teradata.udaexec - INFO - Reading config files: [u'/etc/udaexec.ini: Not Found', u'/Users/mifang/udaexec.ini: Not Found', u'/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/udaexec.ini: Not Found']
+2018-02-16 01:28:22,752 - teradata.udaexec - INFO - Found run number file: "/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/.runNumber"
+2018-02-16 01:28:22,752 - teradata.udaexec - INFO - Cleaning up log files older than 90 days.
+2018-02-16 01:28:22,752 - teradata.udaexec - INFO - Removed 0 log files.
+2018-02-16 01:28:22,789 - django.request - ERROR - Internal Server Error: /myapp/list/
+Traceback (most recent call last):
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/myproject/myapp/views.py", line 47, in list
+    validateMarginFile.validateMarginFileProcess(uploadedFileAbsPath,ValidationIndex,logInfo)
+  File "/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/myproject/myapp/resource/validateMarginFile.py", line 10, in validateMarginFileProcess
+    connectTD.connectTD()
+  File "/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/myproject/myapp/resource/LibraryFile/connectTD.py", line 24, in connectTD
+    udaExec = teradata.UdaExec(appName="ConnectTDDEV")
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/teradata/udaexec.py", line 130, in __init__
+    version, default=""), self.config.resolve(gitPath, default=""))
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/teradata/udaexec.py", line 383, in _initVersion
+    api.CONFIG_ERROR, "version is a required field, it must be "
+InterfaceError: ('CONFIG_ERROR', 'version is a required field, it must be passed in as a parameter, specified in a config file, or pulled from a git repository.')

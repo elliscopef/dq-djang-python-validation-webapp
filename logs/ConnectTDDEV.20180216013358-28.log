@@ -1,0 +1,58 @@
+2018-02-16 01:33:58,050 - teradata.udaexec - INFO - Initializing UdaExec...
+2018-02-16 01:33:58,050 - teradata.udaexec - INFO - Reading config files: [u'/etc/udaexec.ini: Not Found', u'/Users/mifang/udaexec.ini: Not Found', u'/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/udaexec.ini: Not Found']
+2018-02-16 01:33:58,051 - teradata.udaexec - INFO - Found run number file: "/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/.runNumber"
+2018-02-16 01:33:58,051 - teradata.udaexec - INFO - Cleaning up log files older than 90 days.
+2018-02-16 01:33:58,051 - teradata.udaexec - INFO - Removed 0 log files.
+2018-02-16 01:33:58,084 - teradata.udaexec - INFO - Checkpoint file not found: /Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/ConnectTDDEV.checkpoint
+2018-02-16 01:33:58,085 - teradata.udaexec - INFO - No previous checkpoint found, executing from beginning...
+2018-02-16 01:33:58,085 - teradata.udaexec - INFO - Execution Details:
+/********************************************************************************
+ * Application Name: ConnectTDDEV
+ *          Version: 2
+ *       Run Number: 20180216013358-28
+ *             Host: BELC02RJ96BG8WN.sea.corp.expecn.com
+ *         Platform: Darwin-16.7.0-x86_64-i386-64bit
+ *          OS User: mifang
+ *   Python Version: 2.7.10
+ *  Python Compiler: GCC 4.2.1 Compatible Apple LLVM 8.0.0 (clang-800.0.34)
+ *     Python Build: ('default', 'Feb  7 2017 00:08:15')
+ *  UdaExec Version: 15.10.0.21
+ *     Program Name: /Users/mifang/eb-virt/bin/gunicorn
+ *      Working Dir: /Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject
+ *          Log Dir: /Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/logs
+ *         Log File: /Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/logs/ConnectTDDEV.20180216013358-28.log
+ *     Config Files: [u'/etc/udaexec.ini: Not Found', u'/Users/mifang/udaexec.ini: Not Found', u'/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/udaexec.ini: Not Found']
+ *      Query Bands: ApplicationName=ConnectTDDEV;Version=2;JobID=20180216013358-28;ClientUser=mifang;Production=False;udaAppLogFile=/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/logs/ConnectTDDEV.20180216013358-28.log;UtilityName=PyTd;UtilityVersion=15.10.0.21
+********************************************************************************/
+2018-02-16 01:33:58,103 - teradata.udaexec - INFO - Creating connection: {'username': 'D_DM_BEX_CLICKSTREAM_ADB', 'password': 'XXXXXX', 'method': 'odbc', 'system': 'tddev'}
+2018-02-16 01:33:58,103 - teradata.tdodbc - INFO - Loading ODBC Library: libiodbc.dylib
+2018-02-16 01:33:58,120 - teradata.tdodbc - INFO - Available drivers: Teradata Database ODBC Driver 16.20
+2018-02-16 01:34:18,312 - teradata.udaexec - ERROR - Unable to create connection: {'username': 'D_DM_BEX_CLICKSTREAM_ADB', 'password': 'XXXXXX', 'method': 'odbc', 'system': 'tddev'}
+Traceback (most recent call last):
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/teradata/udaexec.py", line 183, in connect
+    **args))
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/teradata/tdodbc.py", line 454, in __init__
+    checkStatus(rc, hDbc=self.hDbc, method="SQLDriverConnectW")
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/teradata/tdodbc.py", line 231, in checkStatus
+    raise DatabaseError(i[2], u"[{}] {}".format(i[0], msg), i[0])
+DatabaseError: (434, u'[HY000] [Teradata][WSock32 DLL] (434) WSA E TimedOut: No response received when attempting to connect to the Teradata server')
+2018-02-16 01:34:18,315 - django.request - ERROR - Internal Server Error: /myapp/list/
+Traceback (most recent call last):
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/django/core/handlers/base.py", line 149, in get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/django/core/handlers/base.py", line 147, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/myproject/myapp/views.py", line 47, in list
+    validateMarginFile.validateMarginFileProcess(uploadedFileAbsPath,ValidationIndex,logInfo)
+  File "/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/myproject/myapp/resource/validateMarginFile.py", line 10, in validateMarginFileProcess
+    connectTD.connectTD()
+  File "/Users/mifang/Documents/Expedia/Framework/heroku/data-file-validation-test/myproject/myproject/myapp/resource/LibraryFile/connectTD.py", line 27, in connectTD
+    with udaExec.connect(method=config.get('DEFAULT', 'method'), system=config.get('TDDEV', 'system'),username=config.get('TDDEV', 'username'), password=config.get('TDDEV', 'password')) as session:
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/teradata/udaexec.py", line 183, in connect
+    **args))
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/teradata/tdodbc.py", line 454, in __init__
+    checkStatus(rc, hDbc=self.hDbc, method="SQLDriverConnectW")
+  File "/Users/mifang/eb-virt/lib/python2.7/site-packages/teradata/tdodbc.py", line 231, in checkStatus
+    raise DatabaseError(i[2], u"[{}] {}".format(i[0], msg), i[0])
+DatabaseError: (434, u'[HY000] [Teradata][WSock32 DLL] (434) WSA E TimedOut: No response received when attempting to connect to the Teradata server')
+2018-02-16 01:34:23,003 - teradata.udaexec - INFO - UdaExec exiting.

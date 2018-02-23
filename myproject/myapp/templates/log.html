@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>THIS IS A LOG PAGE</title>
+    </head>
+
+    <body>
+        <p>Please see the below for the validation log</p>
+        {% if documents %}
+            <ul>
+                {% for document in documents %}
+                    <li>{{document}}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No documents.</p>
+        {% endif %}
+    </body>
+
+</html>
