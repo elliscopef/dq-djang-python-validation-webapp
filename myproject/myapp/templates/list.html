@@ -3,32 +3,64 @@
     <head>
         <meta charset="utf-8">
         <title>Minimal Django File Upload Example</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
 
     <body>
-        <h1 style="text-align:center;">EDE Data File Validation </h1>
+        <div class="row" style="text-align:center;">
+        <div class="col-2">
+            <br>
+            <img src="https://s3.amazonaws.com/uploads.hipchat.com/28219/3948212/5fmjaKWg2GpnXkR/ede_logo.png" alt="Mountain View" style="width:70px;height:90px;">
+        </div>
+        <div class="col-10">
+            <img src=" https://s3.amazonaws.com/uploads.hipchat.com/28219/3948212/Qzpb2ajnz8MUDz0/expedia_logo.png" alt="Mountain View" style="width:140px;height:105px;" align = "right">
+            <br>
+            <h1 style="text-align:left">EDE Data File Validation</h1>
+            <hr>
+        </div>
+        </div>
         <!-- Upload form. Note enctype attribute! -->
+        <div class="mx-auto" style="width: 600px;margin-top: 60px">
         <form action="{% url "list" %}" method="post" enctype="multipart/form-data" id = "fileForm">
             {% csrf_token %}
             
             <p>{{ form.non_field_errors }}</p>
 
-            <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+            <p>Please select a file from local to validate</p>
             
             <p>
                 {{ form.docfile.errors }}
                 {{ form.docfile }}
             </p>
-            <p>Note:make sure the file selected doesn't have bracket in name</p>
-            <select name="fileFormatSelection" form = "fileForm">
-                <option value="M_V_1">Margin File V 1.0</option>
-                <option value="M_V_3">Margin File V 3.0</option>
-            </select>
+
+
+            <p>* Note:make sure the file selected doesn't have bracket in name</p>
+
+            <div>
+                <select name="fileFormatSelection" form = "fileForm" class="form-control form-control-sm">
+                    <option value="M_V_1">Margin File V 1.0</option>
+                    <option value="M_V_3">Margin File V 3.0</option>
+                </select>
+            <div>
+            
+            <div>
+                <p>Please select the file format for validation method</p>
+            </div>
 
             <p><input type="submit" value="Validate"/></p>
         </form>
+        </div>
+
+
+        <div class="footer-copyright py-6 text-center">
+            <br>
+            <div class="container-fluid">
+                  © 2018 Copyright: <a href="https://confluence/display/IT/BEX+EDE+Delivery+Team"> Expedia EDE </a>
+      
+            </div>
+        </div>
         <!-- List of uploaded documents -->
-        {% if documents %}
+<!--         {% if documents %}
             <ul>
                 {% for document in documents %}
                     <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
@@ -36,9 +68,13 @@
             </ul>
         {% else %}
             <p>No documents.</p>
-        {% endif %}
+        {% endif %} -->
 
-
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>
 
 </html>
+
+
