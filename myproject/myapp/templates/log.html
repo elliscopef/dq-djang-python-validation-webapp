@@ -3,19 +3,53 @@
     <head>
         <meta charset="utf-8">
         <title>THIS IS A LOG PAGE</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     </head>
 
     <body>
-        <p>Please see the below for the validation log</p>
-        {% if documents %}
-            <ul>
-                {% for document in documents %}
-                    <li>{{document}}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No documents.</p>
-        {% endif %}
+        <div class="row" style="text-align:center;">
+        <div class="col-2">
+            <br>
+            <img src="https://s3.amazonaws.com/uploads.hipchat.com/28219/3948212/5fmjaKWg2GpnXkR/ede_logo.png" alt="Mountain View" style="width:70px;height:90px;">
+        </div>
+        <div class="col-10">
+            <img src=" https://s3.amazonaws.com/uploads.hipchat.com/28219/3948212/Qzpb2ajnz8MUDz0/expedia_logo.png" alt="Mountain View" style="width:140px;height:105px;" align = "right">
+            <br>
+            <h1 style="text-align:left">EDE Data File Validation</h1>
+            <hr>
+        </div>
+        </div>
+
+        <div align="center"  class="panel panel-default">
+              <div class="panel-heading" >Analysis Results</div>
+              <div class="panel-body" align="left">        
+                <p>Please see the below for the validation log</p>
+                {% if documents %}
+                <ul>
+                    {% for document in documents %}
+                        <li>{{document}}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No documents.</p>
+                {% endif %}
+              </div>
+              <div class="panel-footer">End of Log</div>
+        </div>
+
+        <div class="footer-copyright py-6 text-center">
+            <br>
+            <div class="container-fluid">
+                  © 2018 Copyright: <a href="https://confluence/display/IT/BEX+EDE+Delivery+Team"> Expedia EDE </a>
+      
+            </div>
+        </div>
+<!--         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </body>
 
 </html>

@@ -1,6 +1,3 @@
-
-
-
 from .. import varSettings
 
 import os
@@ -132,12 +129,12 @@ def check_factor_column(column_name,logInfo):
 		section_validated_msg(column_name)
 	else:
 		section_fail_msg(column_name)
-		sys.exit(0)
+		return
 
 
 def validateMarginFile_v1(sourceFileName,logInfo):
 	print"Initialize the validation process" 
-	logInfo.append("Start to Load the margin 1.0 file")
+	logInfo.append("Start to Load the margin 1.0 file" +sourceFileName)
 	pos_set = load_pos_data()
 	zeroList = [0] * len(pos_set)
 	pos_list_tuple = zip(pos_set, zeroList)
@@ -145,9 +142,7 @@ def validateMarginFile_v1(sourceFileName,logInfo):
 
 	filename = sourceFileName
 	df = pd.read_csv(filename,index_col=False)
-
 	logInfo.append("Load file successfully")
-
 	logInfo.append("Start to validate the column")
 
 
@@ -157,7 +152,7 @@ def validateMarginFile_v1(sourceFileName,logInfo):
 #CheckHeader 
 	if(header_set[0].strip() != 'Account' or header_set[1].strip() !='Point of Sale' or header_set[2].strip() != 'Business Type' or header_set[3].strip() != 'Product'):
 		logInfo.append("Header isn't formatted correctly")
-		sys.exit(0)
+		return
 
 
 
@@ -167,7 +162,7 @@ def validateMarginFile_v1(sourceFileName,logInfo):
 		if not checkAccountFormat(account,logInfo):
 			section_fail_msg(header_set[0],logInfo)
 			row_tracker_alert(logInfo)
-			sys.exit(0)
+			return
 
 	section_validated_msg(header_set[0],logInfo)
 
@@ -179,7 +174,7 @@ def validateMarginFile_v1(sourceFileName,logInfo):
 		if not checkPOSFormat(pos,pos_dic,logInfo):
 			section_fail_msg(header_set[1],logInfo)
 			row_tracker_alert(logInfo)
-			sys.exit(0)
+			return
 
 	section_validated_msg(header_set[1],logInfo)
 
@@ -189,7 +184,7 @@ def validateMarginFile_v1(sourceFileName,logInfo):
 		if not checkBusinessTypeFormat( business_type,logInfo):
 			section_fail_msg(header_set[2],logInfo)
 			row_tracker_alert(logInfo,logInfo)
-			sys.exit(0)
+			return
 
 	section_validated_msg(header_set[2],logInfo)
 
@@ -199,7 +194,7 @@ def validateMarginFile_v1(sourceFileName,logInfo):
 		if not checkProductFormat(product,logInfo):
 			section_fail_msg(header_set[3],logInfo)
 			row_tracker_alert(logInfo)
-			sys.exit(0)
+			return
 
 	section_validated_msg(header_set[3],logInfo)
 
@@ -211,7 +206,7 @@ def validateMarginFile_v1(sourceFileName,logInfo):
 			except ValueError:
 				logInfo.append("ValueError: Value can not be converted to float format.")
 				section_fail_msg(date,logInfo)
-				sys.exit(0)
+				return
 
 	logInfo.append("Below is a list of site names not shown up in table")
 	logInfo.append("Point of sale, number of occurance")

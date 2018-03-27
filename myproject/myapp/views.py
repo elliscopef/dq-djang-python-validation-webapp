@@ -20,7 +20,6 @@ logInfo = []
 
 
 def list(request):
-
     # Handle file upload
     if request.method == 'POST':
         print "reset logIn to empty"
@@ -46,14 +45,16 @@ def list(request):
                 ValidationIndex = 1;
             else:
                 ValidationIndex = 3;
-    
             print("Start the validation process")
             validateMarginFile.validateMarginFileProcess(uploadedFileAbsPath,ValidationIndex,logInfo)
             # validateMarginFile.validateMarginFileProcess("/Users/mifang/Documents/Expedia/Project/tutorial/djangoTutorial/dq-djang-python-validation-webapp/myproject/myproject/myapp/resource/DataFile/sample3.0.csv",3,logInfo)
             
             
             print("Start to remove the file from the folder")
-            os.remove(uploadedFileAbsPath)
+            try:
+                os.remove(uploadedFileAbsPath)
+            except:
+                print("Failed to remove the file from cloud")
 
             print "HERE IS THE LogInfo before reverse to log"
             print logInfo

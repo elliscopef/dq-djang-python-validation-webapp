@@ -1,6 +1,3 @@
-
-
-
 from .. import varSettings
 
 import os
@@ -155,11 +152,14 @@ def check_factor_column(column_name,df,logInfo):
 
 def validateMarginFile_v3(sourceFileName,logInfo):
 	print"Initialize the validation process" 
-	logInfo.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	logInfo.append("Start to Load the margin 3.0 file: "+sourceFileName)
 	pos_set  = load_pos_data()
 	filename = sourceFileName
-	df = pd.read_csv(filename,index_col=False)
+	try:
+		df = pd.read_csv(filename,index_col=False)
+	except:
+		logInfo.append("Reading csv file failes.Please upload a csv file.")
+		return
 	logInfo.append("Load file successfully")
 	logInfo.append("Start to validate the column")
 
