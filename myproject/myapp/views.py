@@ -15,9 +15,10 @@ import os
 
 global logInfo 
 global ValidationIndex
+global logError
 
 logInfo = []
-
+logError  = []
 
 def list(request):
     # Handle file upload
@@ -46,7 +47,7 @@ def list(request):
             else:
                 ValidationIndex = 3;
             print("Start the validation process")
-            validateMarginFile.validateMarginFileProcess(uploadedFileAbsPath,ValidationIndex,logInfo)
+            validateMarginFile.validateMarginFileProcess(uploadedFileAbsPath,ValidationIndex,logInfo,logError)
             # validateMarginFile.validateMarginFileProcess("/Users/mifang/Documents/Expedia/Project/tutorial/djangoTutorial/dq-djang-python-validation-webapp/myproject/myproject/myapp/resource/DataFile/sample3.0.csv",3,logInfo)
             
             
@@ -79,6 +80,6 @@ def log(request):
     return render(
         request,
         'log.html',
-        {'documents': logInfo}
+        {'documents': logInfo,'logError':logError}
     )
 

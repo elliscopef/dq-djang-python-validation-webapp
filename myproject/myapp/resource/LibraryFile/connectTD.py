@@ -21,7 +21,8 @@ def connectTD():
 #read credential file prior to the connecting
 	config = ConfigParser.RawConfigParser(allow_no_value=True)
 	config.readfp(io.BytesIO(file_config))
-	udaExec = teradata.UdaExec(appName="ConnectTDDEV",version="2")
+	udaExec = teradata.UdaExec(appName="ConnectTDDEV",version="2",odbcLibPath="/opt/unixodbc-2.3.4-0/share/man/man1/odbcinst.1")
+
 	fh = open(varSettings.pos_txt_file_path, "w")
 
 	with udaExec.connect(method=config.get('DEFAULT', 'method'), system=config.get('TDDEV', 'system'),username=config.get('TDDEV', 'username'), password=config.get('TDDEV', 'password')) as session:
