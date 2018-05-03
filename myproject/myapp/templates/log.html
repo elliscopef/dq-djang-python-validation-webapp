@@ -25,6 +25,16 @@
               <div class="panel-heading" >Analysis Results</div>
               <div class="panel-body" align="left">        
                 <p>Please see the below for the validation log</p>
+
+                {% if logError %}
+                <ul>
+                    {% for error in logError %}
+                        <li><span style="color: #ff0000"><b>{{error}}</b></span></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+
                 {% if documents %}
                 <ul>
                     {% for document in documents %}
@@ -35,13 +45,7 @@
                     <p>No documents.</p>
                 {% endif %}
 
-                {% if logError %}
-                <ul>
-                    {% for error in logError %}
-                        <li><span style="color: #ff0000"><b>{{error}}</b></span></li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
+
 
 
               </div>

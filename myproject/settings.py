@@ -26,7 +26,7 @@ SECRET_KEY = '-q@x+fbn4vl-+qs!*a=+(u%j1w76z_(7re-1*b+yb&a+rj=-&+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ede-data-validation-test.mxiwzrapjx.us-east-1.elasticbeanstalk.com','localhost','0.0.0.0','127.0.0.1']
+ALLOWED_HOSTS = ['data-validation-webapp-prod.sfgn6zpbbd.us-east-1.elasticbeanstalk.com','ec2-52-87-193-5.compute-1.amazonaws.com','localhost','0.0.0.0','127.0.0.1']
 
 
 # Application definition
